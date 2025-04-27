@@ -1,4 +1,4 @@
-baseURL = 'https://example.org/'
-languageCode = 'en-us'
-title = 'Site'
+baseURL = 'https://www.baidu.com/'
+languageCode = 'cn-zh'
+title = 'Zorro'
 theme = 'stack'
