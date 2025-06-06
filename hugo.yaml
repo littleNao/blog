@@ -1,0 +1,41 @@
+baseURL: https://example.org/
+languageCode: en-us
+title: ZorroBlog
+theme: PaperMod
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON 
+
+params:
+  ShowBreadCrumbs: true # 面包屑导航
+  ShowReadingTime: true # 阅读时间
+  #ShowShareButtons: true # 分享按钮
+  ShowPostNavLinks: true # 文章前后页按钮
+
+  homeInfoParams:
+    Title: '没有绝世神功，唯有持续积累' # 主题
+    Content: '歇歇脑子，记录一下，学习学习，每天进步一点点。' # 描述
+
+
+#菜单
+menu:
+  main:
+    - identifier: archives
+      name: 归档
+      url: /archives/
+      weight: 1
+    - identifier: categories
+      name: 分类
+      url: /categories/
+      weight: 2
+    - identifier: tags
+      name: 标签
+      url: /tags/
+      weight: 3
+    - identifier: search
+      name: 搜索
+      url: /search/
+      weight: 4
