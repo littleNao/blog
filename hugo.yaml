@@ -10,6 +10,13 @@ outputs:
     - JSON 
 
 params:
+  # assets:
+  #   favicon: "images/favicon.ico"
+  #   favicon16x16: "images/favicon.ico"
+  #   favicon32x32: "images/favicon.ico"
+  #   apple_touch_icon: "images/favicon.ico"
+  #   safari_pinned_tab: "images/favicon.ico"
+
   ShowBreadCrumbs: true # 面包屑导航
   ShowReadingTime: true # 阅读时间
   #ShowShareButtons: true # 分享按钮

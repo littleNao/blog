@@ -212,3 +212,81 @@ dbMapping:
 4. 配置了过早的`canal.instance.master.journal.name=`和`canal.instance.master.position=` 导致启动时一直报错找不到同步节点。
 > 这里如果不考虑旧的同步数据可以不设置，会从最新节点同步。
 5. 如果不设置`canal.instance.master.journal.name=`和`canal.instance.master.position=` 要把deployer的`/conf/example/`目录下`meta.bat`文件删除，否则`meta.bat`文件会存有旧的节点数据。
+### 2025.07.17 多库同步配置
+1. 修改 deployer/conf/canal.properties 配置文件
+```yaml
+#################################################
+#########               destinations            #############
+#################################################
+# 配置多个通过,分割
+canal.destinations = example,test1,test2
+```
+2. 修改 adapter/conf/application.yml 配置文件
+```yaml
+server:
+  port: 8081
+spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+
+canal.conf:
+  mode: tcp #tcp kafka rocketMQ rabbitMQ
+  #flatMessage: true
+  #zookeeperHosts:
+  syncBatchSize: 1000
+  retries: 0
+  timeout:
+  accessKey:
+  secretKey:
+  consumerProperties:
+    # canal tcp consumer
+    canal.tcp.server.host: 127.0.0.1:11111
+    #canal.tcp.zookeeper.hosts:
+    canal.tcp.batch.size: 500
+    canal.tcp.username:
+    canal.tcp.password:
+
+  srcDataSources:
+    defaultDS:
+      # 需要同步的源数据库
+      url: jdbc:mysql://127.0.0.1:3306/db?useUnicode=true
+      # 授权的canal账号和密码
+      username: canal
+      password: Canal@123456
+  canalAdapters:
+  # 实例名称 如果deployer没有修改这里保持默认值就可以
+  - instance: example # canal instance Name or mq topic name
+    groups:
+      # 适配器组ID。保持默认即可。
+    - groupId: g1
+      outerAdapters:
+      # 适配器类型，我这里保持默认没有修改
+      - name: rdb
+        # 适配器标识 可自定义
+        key: mysql1
+        # 目标库信息
+        properties:
+          jdbc.driverClassName: com.mysql.jdbc.Driver
+          jdbc.url: jdbc:mysql://127.0.0.1:3306/test1?useUnicode=true
+          jdbc.username: canal
+          jdbc.password: Canal@123456
+  # 与deployer/conf/canal.properties内多个名称保持一致
+  - instance: test1 # canal instance Name or mq topic name
+    groups:
+      # 适配器组ID。保持默认即可。
+    - groupId: g2
+      outerAdapters:
+      # 适配器类型，我这里保持默认没有修改
+      - name: rdb
+        # 适配器标识 可自定义
+        key: mysql2
+        # 目标库信息
+        properties:
+          jdbc.driverClassName: com.mysql.jdbc.Driver
+          jdbc.url: jdbc:mysql://127.0.0.1:3306/test2?useUnicode=true
+          jdbc.username: canal
+          jdbc.password: Canal@123456
+```
+canalAdapters为一个列表，多个库需要配置时设置多个instance即可
